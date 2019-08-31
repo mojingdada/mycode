@@ -1,0 +1,32 @@
+<html xmlns:th="http://www.thymeleleaf.org">
+<body>
+<pre>
+    <span th:text="${value1}"></span>
+    <table th:each="color:${colors}">
+        <tr>
+            <td>
+                颜色:
+            </td>
+            <td th:text="${color}">
+            </td>
+        </tr>
+    </table>
+    <table th:each="key:${map.keySet()}">
+        <tr>
+            <td>
+                Number:
+            </td>
+            <td th:text="${key}"></td>
+            <td>
+               Vaule:
+            </td>
+            <td th:text="${map.get(key)}"></td>
+        </tr>
+
+    </table>
+    <a th:text="${user.name}"></a>
+    <a th:text="${user.age}"></a>
+
+</pre>
+</body>
+</html>
