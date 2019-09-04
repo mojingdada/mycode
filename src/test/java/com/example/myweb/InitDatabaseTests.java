@@ -1,15 +1,17 @@
 package com.example.myweb;
 
 
+import com.example.myweb.dao.QuestionDAO;
 import com.example.myweb.dao.UserDAO;
+import com.example.myweb.model.Question;
 import com.example.myweb.model.User;
-import org.assertj.core.api.Assert;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
 
+import java.util.Date;
 import java.util.Random;
 
 @SpringBootTest
@@ -17,6 +19,8 @@ import java.util.Random;
 public class InitDatabaseTests {
     @Autowired
     UserDAO userDAO;
+    @Autowired
+    QuestionDAO questionDAO;
 
     @Test
     public void contextLoads() {
@@ -30,9 +34,19 @@ public class InitDatabaseTests {
             userDAO.addUser(user);
             user.setPassword("xxx");
             userDAO.updatePassword(user);
+
+            Question question = new Question();
+            question.setCommentCount(i);
+            Date date = new Date();
+            date.setTime(date.getTime() + 1000 * 3600 * 5 * i);
+            question.setCreatedDate(date);
+            question.setUserId(i + 1);
+            question.setTitle(String.format("TITLE{%d}", i));
+            question.setContent(String.format("Balaababalalalal Content %d", i));
+            questionDAO.addQuestion(question);
+
         }
-//        Assert.assertEquals("newpassword", userDAO.selectById(1).getPassword());
-//        userDAO.deleteById(1);
-//        Assert.assertNull(userDAO.selectById(1));
+        System.out.println(questionDAO.selectLatestQuestions(0, 0, 10));
+
     }
 }
