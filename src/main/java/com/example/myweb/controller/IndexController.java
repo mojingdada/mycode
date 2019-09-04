@@ -1,11 +1,14 @@
 package com.example.myweb.controller;
 
+import com.example.myweb.Service.MySQLTestService;
 import com.example.myweb.Service.WendaService;
+import com.example.myweb.model.TestModel;
 import com.example.myweb.model.User;
 import org.apache.juli.logging.LogFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -70,21 +73,21 @@ public class IndexController {
         return sb.toString();
     }
 
-    @RequestMapping(path = {"/vm"}, method = {RequestMethod.GET})
-    public String vm(Model model) {
-        model.addAttribute("value1", "1");
-        model.addAttribute("value2", "2");
-        model.addAttribute("value3", "3");
-        List<String> colors = Arrays.asList(new String[]{"RED", "YELLOW", "BLUE"});
-        model.addAttribute("colors", colors);
-        HashMap map = new HashMap();
-        for (int i = 0; i < 4; i++)
-            map.put(i, i * i);
-        model.addAttribute("map", map);
-        User user = new User("Lee", 18);
-        model.addAttribute("user", user);
-        return "home";
-    }
+//    @RequestMapping(path = {"/vm"}, method = {RequestMethod.GET})
+//    public String vm(Model model) {
+//        model.addAttribute("value1", "1");
+//        model.addAttribute("value2", "2");
+//        model.addAttribute("value3", "3");
+//        List<String> colors = Arrays.asList(new String[]{"RED", "YELLOW", "BLUE"});
+//        model.addAttribute("colors", colors);
+//        HashMap map = new HashMap();
+//        for (int i = 0; i < 4; i++)
+//            map.put(i, i * i);
+//        model.addAttribute("map", map);
+//        User user = new User("Lee", 18);
+//        model.addAttribute("user", user);
+//        return "home";
+//    }
 
     @RequestMapping(path = "/redirect/{code}", method = {RequestMethod.GET})
     @ResponseBody
@@ -96,6 +99,24 @@ public class IndexController {
             red.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
         }
         return red;
+    }
+
+    @RestController
+    @Scope("prototype")
+    @RequestMapping("/mysql/test")
+    public class MySQLTestController {
+        @Autowired
+        private MySQLTestService mySQLTestService;
+
+        @PostMapping(value = "/select")
+        public List<TestModel> select() throws Exception {
+            return mySQLTestService.select();
+        }
+
+        @PostMapping(value = "/insert")
+        public int insert(@RequestParam(value = "name") String name) throws Exception {
+            return mySQLTestService.insert(name);
+        }
     }
 
     @RequestMapping(path = {"/admin"}, method = {RequestMethod.GET})
