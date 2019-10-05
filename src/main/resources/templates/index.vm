@@ -1,4 +1,4 @@
-#parse("header.html")
+#parse("header.vm")
 <html xmlns:th="http://www.thymeleleaf.org">
     <div class="zg-wrap zu-main clearfix " role="main">
         <div class="zu-main-content">
